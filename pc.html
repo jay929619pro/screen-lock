@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锁屏H5</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        background: url(./images/bg.jpg) no-repeat center center;
+        background-size: 100% 100%;
+        position: relative;
+        overflow: hidden;
+      }
+      .dog-container {
+        position: absolute;
+        top: 20%;
+        left: 0;
+        width: 100%;
+        height: 60%;
+      }
+      .dog {
+        position: absolute;
+        width: 50%;
+        height: auto;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+      }
+      .dog.active {
+        opacity: 1;
+      }
+      .dog:nth-child(1) {
+        top: 30%;
+        left: 25%;
+      }
+      .dog:nth-child(2) {
+        top: 50%;
+        left: 0%;
+      }
+      .dog:nth-child(3) {
+        top: 0%;
+        left: 45%;
+      }
+      .dog:nth-child(4) {
+        top: 45%;
+        left: 45%;
+      }
+      .dog:nth-child(5) {
+        top: 20%;
+        left: 0%;
+      }
+      .dog:nth-child(6) {
+        top: 50%;
+        left: 27%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="dog-container">
+        <img class="dog" src="./images/1.webp" alt="" />
+        <img class="dog" src="./images/2.webp" alt="" />
+        <img class="dog" src="./images/3.webp" alt="" />
+        <img class="dog" src="./images/4.webp" alt="" />
+        <img class="dog" src="./images/5.webp" alt="" />
+        <img class="dog" src="./images/6.webp" alt="" />
+      </div>
+    </div>
+    <script>
+      const dogs = document.querySelectorAll(".dog");
+      let currentIndex = 0;
+
+      function showNextDog() {
+        // 移除当前小狗的active类
+        dogs[currentIndex].classList.remove("active");
+
+        // 计算下一个小狗的索引
+        currentIndex = (currentIndex + 1) % dogs.length;
+
+        // 给下一个小狗添加active类
+        dogs[currentIndex].classList.add("active");
+      }
+
+      // 显示第一只小狗
+      dogs[0].classList.add("active");
+
+      // 每3秒切换一次
+      setInterval(showNextDog, 5000);
+    </script>
+  </body>
+</html>
