@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锁屏H5</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        background: url(./images/bg.jpg) no-repeat center center;
+        background-size: 100% 100%;
+        position: relative;
+        overflow: hidden;
+      }
+      .dog-container {
+        position: absolute;
+        top: 20%;
+        left: 0;
+        width: 100%;
+        height: 60%;
+      }
+      .dog {
+        position: absolute;
+        width: 50%;
+        height: auto;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        left: 40%;
+        top: 40%;
+      }
+      .dog.active {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="dog-container">
+        <img class="dog" src="./images/all/1.webp" alt="" />
+        <img class="dog" src="./images/all/2.webp" alt="" />
+        <img class="dog" src="./images/all/3.webp" alt="" />
+        <img class="dog" src="./images/all/4.webp" alt="" />
+        <img class="dog" src="./images/all/5.webp" alt="" />
+        <img class="dog" src="./images/all/6.webp" alt="" />
+        <img class="dog" src="./images/all/7.webp" alt="" />
+      </div>
+    </div>
+    <script>
+      const dogs = document.querySelectorAll(".dog");
+      let currentIndex = 0;
+      const originalSrcs = Array.from(dogs).map(dog => dog.src);
+
+      function showNextDog() {
+        // 移除当前小狗的active类
+        dogs[currentIndex].classList.remove("active");
+
+        // 计算下一个小狗的索引
+        const nextIndex = (currentIndex + 1) % dogs.length;
+
+        // 重置将要显示的图片的src以触发重新加载
+        const nextDog = dogs[nextIndex];
+        const originalSrc = originalSrcs[nextIndex];
+        nextDog.src = "";
+
+        // 使用setTimeout确保src被移除后再添加回来
+        setTimeout(() => {
+          nextDog.src = originalSrc;
+          nextDog.classList.add("active");
+        }, 10);
+
+        currentIndex = nextIndex;
+      }
+
+      // 保存所有图片的原始src
+      Array.from(dogs).forEach((dog, index) => {
+        originalSrcs[index] = dog.src;
+      });
+
+      // 显示第一只小狗
+      dogs[0].classList.add("active");
+
+      // 每5秒切换一次
+      setInterval(showNextDog, 5000);
+    </script>
+  </body>
+</html>

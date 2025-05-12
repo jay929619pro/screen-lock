@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>锁屏H5</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.3s;
+        background-color: #ffffff; /* 默认浅色背景 */
+      }
+      body.dark-mode {
+        background-color: #1a1a1a;
+      }
+      .container {
+        width: 41.56vh;
+        height: 90vh;
+        background: url(./images/bg.jpg) no-repeat center center;
+        background-size: 100% 100%;
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+      }
+      .dog-container {
+        position: absolute;
+        top: 20%;
+        left: 0;
+        width: 100%;
+        height: 60%;
+      }
+      .dog {
+        position: absolute;
+        width: 50%;
+        height: auto;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        left: 40%;
+        top: 40%;
+      }
+      .dog.active {
+        opacity: 1;
+      }
+      .theme-switch {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 8px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+      .theme-switch:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+      .theme-switch svg {
+        width: 100%;
+        height: 100%;
+        fill: #1a1a1a;
+        transition: fill 0.3s;
+      }
+      body.dark-mode .theme-switch {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      body.dark-mode .theme-switch:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+      body.dark-mode .theme-switch svg {
+        fill: #ffffff;
+      }
+      .theme-switch .moon {
+        display: none;
+      }
+      body.dark-mode .theme-switch .sun {
+        display: none;
+      }
+      body.dark-mode .theme-switch .moon {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <button class="theme-switch" id="themeSwitch">
+      <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM12 21.75a.75.75 0 01-.75-.75v-2.25a.75.75 0 011.5 0V21a.75.75 0 01-.75.75zM3 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3.75A.75.75 0 013 12zM21 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5h2.25A.75.75 0 0121 12zM5.78 5.78a.75.75 0 011.06 0l1.5 1.5a.75.75 0 01-1.06 1.06l-1.5-1.5a.75.75 0 010-1.06zM18.22 5.78a.75.75 0 010 1.06l-1.5 1.5a.75.75 0 11-1.06-1.06l1.5-1.5a.75.75 0 011.06 0zM5.78 18.22a.75.75 0 01-1.06-1.06l1.5-1.5a.75.75 0 111.06 1.06l-1.5 1.5a.75.75 0 01-1.06 0zM18.22 18.22a.75.75 0 01-1.06 0l-1.5-1.5a.75.75 0 111.06-1.06l1.5 1.5a.75.75 0 010 1.06z"
+        />
+      </svg>
+      <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+        />
+      </svg>
+    </button>
+    <div class="container">
+      <div class="dog-container">
+        <img class="dog" src="./images/all/1.webp" alt="" />
+        <img class="dog" src="./images/all/2.webp" alt="" />
+        <img class="dog" src="./images/all/3.webp" alt="" />
+        <img class="dog" src="./images/all/4.webp" alt="" />
+        <img class="dog" src="./images/all/5.webp" alt="" />
+        <img class="dog" src="./images/all/6.webp" alt="" />
+        <img class="dog" src="./images/all/7.webp" alt="" />
+      </div>
+    </div>
+    <script>
+      const dogs = document.querySelectorAll(".dog");
+      let currentIndex = 0;
+      const originalSrcs = Array.from(dogs).map(dog => dog.src);
+
+      function showNextDog() {
+        // 移除当前小狗的active类
+        dogs[currentIndex].classList.remove("active");
+
+        // 计算下一个小狗的索引
+        const nextIndex = (currentIndex + 1) % dogs.length;
+
+        // 重置将要显示的图片的src以触发重新加载
+        const nextDog = dogs[nextIndex];
+        const originalSrc = originalSrcs[nextIndex];
+        nextDog.src = "";
+
+        // 使用setTimeout确保src被移除后再添加回来
+        setTimeout(() => {
+          nextDog.src = originalSrc;
+          nextDog.classList.add("active");
+        }, 10);
+
+        currentIndex = nextIndex;
+      }
+
+      // 保存所有图片的原始src
+      Array.from(dogs).forEach((dog, index) => {
+        originalSrcs[index] = dog.src;
+      });
+
+      // 显示第一只小狗
+      dogs[0].classList.add("active");
+
+      // 每5秒切换一次
+      setInterval(showNextDog, 5000);
+
+      // 主题切换功能
+      const themeSwitch = document.getElementById("themeSwitch");
+
+      // 检查本地存储中的主题设置，默认为深色模式
+      const isDarkMode = localStorage.getItem("darkMode") !== "false";
+      document.body.classList.toggle("dark-mode", isDarkMode);
+
+      themeSwitch.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        // 保存主题设置到本地存储
+        localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
+      });
+    </script>
+  </body>
+</html>
